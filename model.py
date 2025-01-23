@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import resnet
-
+import os 
 def generate_model(opt):
     # Ensure model name matches expected value
     assert opt.model.lower() in ['resnet'], f"Unsupported model type: {opt.model}"
