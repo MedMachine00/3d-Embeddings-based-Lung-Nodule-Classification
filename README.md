@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![PyTorch](https://img.shields.io/badge/PyTorch-1.7.1+-orange.svg)
-
+weights available at https://drive.google.com/drive/folders/1kj-0pYeo_BVQYa8Xy3Na79ii5ZcANDCT?usp=drive_link
 ## Table of Contents
 
 - [Overview](#overview)
