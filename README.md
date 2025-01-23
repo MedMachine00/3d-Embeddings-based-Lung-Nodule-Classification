@@ -16,9 +16,7 @@
 - [Training](#training)
 - [Evaluation](#evaluation)
 - [Results](#results)
-- [Contributing](#contributing)
 - [License](#license)
-- [Contact](#contact)
 
 ## Overview
 
@@ -51,3 +49,113 @@ This repository contains a comprehensive Python script for training a classifica
 git clone https://github.com/yourusername/medical-nodule-classification.git
 cd medical-nodule-classificatio
 
+## Create a Virtual Environment
+
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+## Install Dependencies
+
+pip install numpy nibabel torch torchvision scikit-learn xgboost scikit-image tqdm joblib
+
+## Quick Start
+
+Prepare Your Data: Ensure your dataset is organized with separate directories for each class, containing NIfTI files for masks and CT images.
+
+Download Pretrained Weights: Place the pretrained ResNet-34 and ResNet-50 weights in the pretrained_weights/ directory.
+
+Configure Paths and Parameters: Update the data_root, pretrain_path, and other parameters in the script as needed.
+
+Run the Training Script:
+
+python train_classifier.py
+
+## Usage
+The main script train_classifier.py orchestrates the entire pipeline from data loading to model evaluation. Below is an overview of its key components:
+
+## Command-Line Arguments
+You can modify the script to accept command-line arguments using argparse for greater flexibility. Currently, paths and parameters are hardcoded for simplicity.
+
+## Data Loading and Preprocessing
+
+Loading NIfTI Files: Utilizes nibabel to load .nii or .nii.gz files.
+Lung Windowing: Applies window width and level adjustments to enhance nodule visibility.
+Nodule Extraction: Identifies and extracts nodules from the CT images based on mask files.
+Resizing: Resizes 3D nodules to a uniform size suitable for the ResNet model.
+
+## Model Training
+
+Custom ResNet Integration: Loads a custom ResNet model (resnet.py) and appends a classification layer (model.py).
+Pretrained Weights: Supports loading pretrained weights for ResNet-34 and ResNet-50.
+Training Loop: Trains only the classification layer while freezing the base ResNet model.
+
+## Cross-Validation
+
+Stratified K-Fold: Ensures balanced class distribution across folds.
+SVM and XGBoost: Trains these classifiers on the extracted embeddings.
+Ensemble Methods: Combines predictions from multiple classifiers for improved performance.
+
+
+## Data Preparation
+Ensure your dataset is organized as follows:
+
+Class Directories: 0-filtered and 1-filtered represent different classes.
+Patient Directories: Each PETCT_* directory corresponds to a unique patient.
+Files:
+filtered_components.nii.gz: Binary mask files indicating nodule locations.
+CTres.nii.gz: CT scan images in Hounsfield Units (HU).
+
+
+## Model Details
+
+Custom ResNet (resnet.py and model.py)
+ResNet Variants: Supports ResNet-34 and ResNet-50 architectures.
+Classification Layer: Added a fully connected layer with dropout for classification.
+Embedding Extraction: Retrieves feature embeddings from the base ResNet model.
+
+## Pretrained Weights
+
+Available Weights:
+resnet34_pretrained.pth
+resnet50_pretrained.pth
+Loading Weights: Ensure the correct path is specified in the script to load these weights.
+
+## Training
+To train the classification layer:
+
+Set Parameters: Adjust input dimensions, number of classes, and other hyperparameters in the script.
+
+python train_classifier.py
+
+Monitor Training: The script will output training and validation losses and accuracies for each epoch.
+
+Best Model Saving: The model with the lowest validation loss is saved to the results/ directory.
+
+
+## Evaluation
+
+After training, the script performs evaluation on the test set and outputs detailed metrics:
+
+Neural Network Evaluation: Provides accuracy, precision, recall, F1-score, confusion matrix, and classification report.
+Cross-Validation Metrics: Aggregates performance across all folds for SVM, XGBoost, and ensemble methods.
+Final Test Evaluation: Assesses the performance of the trained classifiers on unseen test data.
+Results.
+
+## Results 
+
+All results, including model weights, metrics, and evaluation reports, are saved in the results/ directory:
+
+results/
+├── best_resnet_with_classifier.pth
+├── training_metrics.csv
+├── all_nodule_embeddings.pkl
+├── all_nodule_labels.pkl
+├── all_nodule_patient_ids.pkl
+├── scaler.joblib
+├── cross_validation_metrics.pkl
+├── nn_test_evaluation.txt
+
+
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
